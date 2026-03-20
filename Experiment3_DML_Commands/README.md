@@ -1,333 +1,248 @@
-# Experiment 4: Aggregate Functions, Group By and Having Clause
-## NAME : VISHAL C
-## REGISTRATION NUMBER : 212224100062
+# Experiment 3: DML Commands
 
 ## AIM
-To study and implement aggregate functions, GROUP BY, and HAVING clause with suitable examples.
+To study and implement DML (Data Manipulation Language) commands.
 
 ## THEORY
 
-### Aggregate Functions
-These perform calculations on a set of values and return a single value.
-
-- **MIN()** – Smallest value  
-- **MAX()** – Largest value  
-- **COUNT()** – Number of rows  
-- **SUM()** – Total of values  
-- **AVG()** – Average of values
-
+### 1. INSERT INTO
+Used to add records into a relation.
+These are three type of INSERT INTO queries which are as
+A)Inserting a single record
+**Syntax (Single Row):**
+```sql
+INSERT INTO table_name (field_1, field_2, ...) VALUES (value_1, value_2, ...);
+```
+**Syntax (Multiple Rows):**
+```sql
+INSERT INTO table_name (field_1, field_2, ...) VALUES
+(value_1, value_2, ...),
+(value_3, value_4, ...);
+```
+**Syntax (Insert from another table):**
+```sql
+INSERT INTO table_name SELECT * FROM other_table WHERE condition;
+```
+### 2. UPDATE
+Used to modify records in a relation.
+Syntax:
+```sql
+UPDATE table_name SET column1 = value1, column2 = value2 WHERE condition;
+```
+### 3. DELETE
+Used to delete records from a relation.
+**Syntax (All rows):**
+```sql
+DELETE FROM table_name;
+```
+**Syntax (Specific condition):**
+```sql
+DELETE FROM table_name WHERE condition;
+```
+### 4. SELECT
+Used to retrieve records from a table.
 **Syntax:**
 ```sql
-SELECT AGG_FUNC(column_name) FROM table_name WHERE condition;
+SELECT column1, column2 FROM table_name WHERE condition;
 ```
-### GROUP BY
-Groups records with the same values in specified columns.
-**Syntax:**
-```sql
-SELECT column_name, AGG_FUNC(column_name)
-FROM table_name
-GROUP BY column_name;
-```
-### HAVING
-Filters the grouped records based on aggregate conditions.
-**Syntax:**
-```sql
-SELECT column_name, AGG_FUNC(column_name)
-FROM table_name
-GROUP BY column_name
-HAVING condition;
-```
-
 **Question 1**
 --
-What is the average dosage prescribed for each medication?
+Write a SQL statement to Update the product_name to 'Premium Bread' whose product ID is 5 in the products table.
 
-Sample tablePrescriptions Table
-```
-Medication     AvgDosage
--------------  ----------
-Ciprofloxacin  500.0
-Doxorubicin    60.0
-Ibuprofen      400.0
-Levothyroxine  50.0
-Lisinopril     10.0
-MMR            0.5
-Pending        0.0
-Prenatal vita  1.0
-Sertraline     50.0
-Topiramate     25.0
-```
-
-```
-SELECT
-  Medication,
-  AVG(Dosage) AS AvgDosage
-FROM
-  Prescriptions
-GROUP BY
-  Medication;
-
+```sql
+UPDATE Products SET product_name = 'Premium Bread'
+WHERE product_id = 5;
 ```
 
 **Output:**
 
+![Screenshot 2025-05-05 134254](https://github.com/user-attachments/assets/20398f14-d470-40ef-a258-f6fd7c55a309)
 
-![Screenshot 2025-04-29 171159](https://github.com/user-attachments/assets/cbf06455-04ba-4d64-899c-19b9f6285e48)
 
 **Question 2**
 ---
-How many patients are there in each city?
-```
-Sample table: Patients Table
+Write a SQL statement to Update the per_unit_price to 25 and total_price accordingly in purchases table where purchase_date is '2022-08-15' and product_id is 12.
 
-Address     TotalPatients
-----------  -------------
-Berlin      3
-Chicago     4
-Mexico      3
-```
-```
-select Address,count(*)
-as TotalPatients
-from Patients
-group by Address
+```sql
+UPDATE purchases 
+SET per_unit_price = 25,
+total_price = quantity *25
+WHERE purchase_date='2022-08-15' AND product_id = 12;
 ```
 
 **Output:**
 
-
-![Screenshot 2025-04-29 171804](https://github.com/user-attachments/assets/8d4957fe-fb4f-4c02-a28e-1f6c65c3430c)
-
-
+![Screenshot 2025-05-05 134354](https://github.com/user-attachments/assets/3b6e6da6-1945-451b-a2b4-cf46fff7c790)
 
 **Question 3**
 ---
-Write a SQL Query to find how many medications are prescribed for each patient?
+Update the 'Selling_Price' to add 10% extra margin for all products supplied by the supplier with id 6.
 
-Sample table:MedicalRecords Table
-```
-PatientID   AvgMedications
-----------  --------------
-4           5
-6           1
-7           1
-8           3
+PRODUCTS TABLE
 
-```
-```
-SELECT PatientID,COUNT(*) AS 
-AvgMedications
-FROM MedicalRecords
-GROUP BY PatientID;
+name               type
+-----------------  ---------------
+product_id         INT
+product_name       VARCHAR(100)
+category           VARCHAR(50)
+cost_price         DECIMAL(10,2)
+sell_price         DECIMAL(10,2)
+reorder_lvl        INT
+quantity           INT
+supplier_id        INT
+
+```sql
+UPDATE Products 
+SET sell_price = sell_price+ (sell_price*0.10) 
+WHERE supplier_id=6;
 ```
 
 **Output:**
 
-
-![Screenshot 2025-04-29 172124](https://github.com/user-attachments/assets/03cd9d50-06b5-4812-9c53-729d7557944f)
+![Screenshot 2025-05-05 134448](https://github.com/user-attachments/assets/78afa96a-525f-48e8-bfe0-e65ebf9747ff)
 
 
 **Question 4**
 ---
-Write a SQL query to find the maximum purchase amount.
+Write a SQL statement to Update the hire_date of employees in department 50 to 2024-01-24.
+```sql
 
-Sample table: orders
-```
-ord_no      purch_amt   ord_date    customer_id  salesman_id
+UPDATE Employees
+SET hire_date = '2024-01-24'
+WHERE department_id = 50 ;
 
-----------  ----------  ----------  -----------  -----------
-
-70001       150.5       2012-10-05  3005         5002
-
-70009       270.65      2012-09-10  3001         5005
-
-70002       65.26       2012-10-05  3002         5001
-```
-```
-SELECT
-  MAX(purch_amt) AS MAXIMUM
-FROM
-  orders;
+ 
 ```
 
 **Output:**
 
-
-![Screenshot 2025-04-29 172220](https://github.com/user-attachments/assets/3b0552ba-cb0f-47b2-a14f-4f41e3f13b8a)
-
+![Screenshot 2025-05-05 134613](https://github.com/user-attachments/assets/47b76f5c-8da1-4415-aa53-2ef8d58169f8)
 
 
 **Question 5**
 ---
-Write a SQL query to find the total income of employees aged 40 or above.
+Write a SQL query to Delete a Specific Surgery whose ID is 3
 
-Table: employee
-```
-name        type
-----------  ----------
-id          INTEGER
-name        TEXT
-age         INTEGER
-city        TEXT
-income      INTEGER
+Sample table: Surgeries
 
-```
-```
-SELECT
-  SUM(income) AS total_income
-FROM
-  employee
-WHERE
-  age >= 40;
+```sql
+DELETE FROM Surgeries
+WHERE surgery_id = 3;
 ```
 
 **Output:**
-
-
-![Screenshot 2025-04-29 172310](https://github.com/user-attachments/assets/7dd0627c-5b47-45cd-9da2-b4c8b2308c33)
+![Screenshot 2025-05-05 134656](https://github.com/user-attachments/assets/8c365f49-5f2a-4ba4-9d08-a98e5d707b93)
 
 
 **Question 6**
 ---
-Write a SQL query to find the number of employees whose age is greater than 32.
+Write a SQL query to remove rows from the table 'customer' with the following condition -
 
-Sample table: employee
+1. 'cust_city' should begin with the letter 'L',
 
-```
-SELECT
-  COUNT(*) AS COUNT
-FROM
-  employee
-WHERE
-  age > 32;
+Sample table: Customer
+
+```sql
+DELETE FROM customer
+WHERE cust_city LIKE'L%';
 ```
 
 **Output:**
 
+![Screenshot 2025-05-05 134751](https://github.com/user-attachments/assets/90685ca8-94d1-40fa-a704-142980569c45)
 
-![Screenshot 2025-04-29 172421](https://github.com/user-attachments/assets/facbdbb0-4fdf-4680-a2f2-05496c32ebde)
 
 **Question 7**
----
-Write a SQL query to find the average length of names for people living in Chennai?
+---Write a SQL query to delete a doctor from Doctors table whose Specialization is 'Pediatrics' and First name is 'Michael'.
 
-Table: customer
-```
-name        type
-----------  ----------
-id          INTEGER
-name        TEXT   
-city        TEXT
-email       TEXT
-phone       INTEGER
-```
-```
-SELECT
-  AVG(LENGTH(name)) AS avg_name_length
-FROM
-  customer
+Sample table: Doctors
+
+```sql
+DELETE FROM Doctors
 WHERE
-  city = 'Chennai';
+specialization ='Pediatrics'AND first_name = 'Michael';
 ```
 
 **Output:**
 
-
-![Screenshot 2025-04-29 172506](https://github.com/user-attachments/assets/d162dc9e-2f89-4e8d-ace5-ffa4b385b7bb)
+![Screenshot 2025-05-05 134855](https://github.com/user-attachments/assets/eb912cfb-1793-4442-a32d-ea7e7bd1c655)
 
 
 **Question 8**
 ---
-Write the SQL query that accomplishes the grouping of data by joining date (jdate), calculates the maximum work hours for each date, and excludes dates where the maximum work hour is not greater than 12.
+Write a SQL query to Select all patients whose name starts with A.
 
-Sample table: employee1
-```
-jdate       MAX(workhour)
-----------  -------------
-2004.0      15
-2006.0      15
-```
-```
-SELECT
-  jdate,
-  MAX(workhour) AS "MAX(workhour)"
-FROM
-  employee1
-GROUP BY
-  jdate
-HAVING
-  MAX(workhour) > 12;
+Table: Patients
+
+name                  type
+--------------------  ----------
+patient_id            INT
+first_name            VARCHAR(50)
+last_name             VARCHAR(50)
+date_of_birth         DATE
+admission_date        DATE
+discharge_date        DATE
+doctor_id             INT
+```sql
+SELECT * FROM Patients
+WHERE first_name LIKE 'A%';
 ```
 
 **Output:**
-
-
-![Screenshot 2025-04-29 172603](https://github.com/user-attachments/assets/4f18be9a-1667-4bc1-825b-115d62e6f1c9)
+![Screenshot 2025-05-05 134943](https://github.com/user-attachments/assets/e8ff2a4c-ccff-4930-b248-fc1948b58e7c)
 
 
 **Question 9**
 ---
-Write the SQL query that achieves the grouping of data by occupation, calculates the total work hours for each occupation, and excludes occupations where the total work hour sum is not greater than 20.
+Write a SQL query to categorize decimal as 'High', 'Medium', or 'Low' based on whether it is greater than 100, between 50 and 100, or less than 50 in the Calculations table
 
-Sample table: employee1
-```
-occupation  SUM(workhour)
-----------  -------------
-Business    30
-Doctor      30
-Engineer    24
-Teacher     27
-```
-```
-SELECT
-  occupation,
-  SUM(workhour) AS "SUM(workhour)"
-FROM
-  employee1
-GROUP BY
-  occupation
-HAVING
-  SUM(workhour) > 20;
+cid         name        type        notnull     dflt_value  pk
+----------  ----------  ----------  ----------  ----------  ----------
+0           id          INTEGER     0                       1
+1           value1      REAL        0                       0
+2           value2      REAL        0                       0
+3           base        INTEGER     0                       0
+4           exponent    INTEGER     0                       0
+5           number      REAL        0                       0
+6           decimal     REAL        0                       0
+ 
+
+```sql
+SELECT id,decimal,
+case
+    when decimal> 100 then 'High'
+    when decimal BETWEEN 50 and 100  then 'Medium'
+    ELSE 'Low'
+    END AS category
+    from Calculations;
 ```
 
 **Output:**
 
-
-![Screenshot 2025-04-29 172703](https://github.com/user-attachments/assets/ed11db98-a58b-4cb2-934b-49a26899d26b)
+![Screenshot 2025-05-05 135106](https://github.com/user-attachments/assets/1574f25a-e70f-4e83-8a8e-96642deee2b5)
 
 
 **Question 10**
 ---
-Write the SQL query that achieves the grouping of data by occupation, calculates the average work hours for each occupation, and includes only those occupations where the average work hour falls between 10 and 12.
+Write a SQL query to find customers who are either from the city 'New York' or who have a grade greater than 200. Return customer_id, cust_name, city, grade, and salesman_id.
 
-Sample table: employee1
+Sample table: customer
 
-```
-occupation  AVG(workhour)
-----------  -------------
-Business    10.0
-Engineer    12.0
-```
-```
-SELECT
-  occupation,
-  AVG(workhour) AS "AVG(workhour)"
-FROM
-  employee1
-GROUP BY
-  occupation
-HAVING
-  AVG(workhour) BETWEEN 10 AND 12;
+ customer_id |   cust_name    |    city    | grade | salesman_id 
+-------------+----------------+------------+-------+-------------
+        3002 | Nick Rimando   | New York   |   100 |        5001
+        3007 | Brad Davis     | New York   |   200 |        5001
+        3005 | Graham Zusi    | California |   200 |        5002
+
+```sql
+SELECT customer_id, cust_name, city, grade,salesman_id FROM customer
+WHERE City = 'New York' OR GRADE >200;
 ```
 
 **Output:**
 
-
-![Screenshot 2025-04-29 172754](https://github.com/user-attachments/assets/2feda0d6-0e59-4af8-a0b6-15ea0c411c22)
-
-
+![Screenshot 2025-05-05 135204](https://github.com/user-attachments/assets/463194d8-3515-477e-87f1-89af39df6737)
 
 
 ## RESULT
-Thus, the SQL queries to implement aggregate functions, GROUP BY, and HAVING clause have been executed successfully.
-
+Thus, the SQL queries to implement DML commands have been executed successfully.
